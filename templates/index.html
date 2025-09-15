@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Disease Prediction</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    h1 { color: #333; }
+    .symptoms { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
+    label { display: inline-block; padding: 5px 10px; border: 1px solid #aaa; border-radius: 5px; cursor: pointer; }
+    input[type="checkbox"] { margin-right: 5px; }
+    button { padding: 10px 20px; background: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer; }
+    button:hover { background: #45a049; }
+    .result { margin-top: 20px; font-size: 18px; font-weight: bold; color: darkblue; }
+  </style>
+</head>
+<body>
+  <h1>🩺 Disease Prediction</h1>
+  <form id="predictionForm">
+    <div class="symptoms">
+      <!-- Symptoms will be injected here -->
+    </div>
+    <button type="submit">Predict Disease</button>
+  </form>
+  <div class="result" id="result"></div>
+
+  <script>
+    // Load symptoms dynamically (same as your model_metadata.json)
+    const symptoms = [
+      "fever","headache","cough","pain","nausea","vomiting","fatigue","diarrhea","rash",
+      "swelling","bleeding","weakness","breathing","chestpain","stomach","throat","nose","eye",
+      "muscle","joint","dizziness","sweating","chills","loss","difficulty","cramps",
+      "itching","burning","tingling","numbness","discharge","spots","lesions","ulcers",
+      "lumps","swollen","tender","stiff","sore"
+    ];
+
+    const symptomsContainer = document.querySelector('.symptoms');
+
+    symptoms.forEach(symptom => {
+      const label = document.createElement('label');
+      label.innerHTML = `<input type="checkbox" name="symptom" value="${symptom}"> ${symptom}`;
+      symptomsContainer.appendChild(label);
+    });
+
+    document.getElementById('predictionForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      const selected = Array.from(document.querySelectorAll('input[name="symptom"]:checked'))
+                            .map(cb => cb.value);
+
+      if (selected.length === 0) {
+        document.getElementById('result').textContent = "⚠️ Please select at least one symptom.";
+        return;
+      }
+
+      const response = await fetch("http://127.0.0.1:5000/predict", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ symptoms: selected })
+      });
+
+      const result = await response.json();
+      if (result.predicted_disease) {
+        document.getElementById('result').textContent =
+          `Predicted Disease: ${result.predicted_disease}`;
+      } else {
+        document.getElementById('result').textContent =
+          `Error: ${result.error || "Something went wrong"}`;
+      }
+    });
+  </script>
+</body>
+</html>
