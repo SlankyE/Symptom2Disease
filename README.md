@@ -129,22 +129,6 @@ disease-prediction/
 
 ---
 
-## Future Enhancements
-
-- Symptom severity scoring  
-- Multi-label predictions  
-- Explainable AI (e.g., SHAP values)  
-- Categorized symptoms & patient history integration  
-- Containerized deployment (Docker, Cloud)  
-- Performance monitoring dashboard  
-
----
-
-## Medical & Ethical Notes
-
-- System is for **educational purposes only**.  
-- Predictions are not a substitute for medical advice.  
-- Clear disclaimers included.  
-- Encourages professional consultation.  
+ 
 
 
